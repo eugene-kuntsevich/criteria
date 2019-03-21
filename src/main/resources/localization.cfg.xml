@@ -1,0 +1,21 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name = "pojo.Localization" table = "localizations">
+
+        <meta attribute = "class-description">
+            This class contains the language detail.
+        </meta>
+
+        <id name = "id" type = "long" column = "id">
+            <generator class="native"/>
+        </id>
+
+        <property name = "value" column = "value" type = "string"/>
+        <property name = "languageId" column = "language_id" type = "long"/>
+        <property name = "cityId" column = "city_id" type = "long"/>
+    </class>
+</hibernate-mapping>
