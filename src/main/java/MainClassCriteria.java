@@ -1,17 +1,23 @@
+import org.hibernate.*;
+import org.hibernate.cfg.Configuration;
 import pojo.City;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.Iterator;
+import java.util.List;
 
-public class MainClass {
+public class MainClassCriteria {
+
+    private static SessionFactory factory;
+    @PersistenceUnit
+    private static EntityManagerFactory emfactory;
 
     public static void main(String[] args) {
-        EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("example-unit");
+
+        // = Persistence.createEntityManagerFactory("com.example");
 
         try {
             System.out.println("START...");
@@ -38,10 +44,38 @@ public class MainClass {
             emfactory.close();
         }
 
-
-
-
-
-
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
