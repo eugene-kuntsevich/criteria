@@ -1,20 +1,30 @@
 package pojo;
 
-public class Language {
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
-    private Long id;
+@Entity
+@Table(name = "language")
+public class Language {
+    @Id
+    @Column(name = "lang_id")
+    private Long langId;
 
     private String nameLng;
+
+    @OneToMany(mappedBy = "language", cascade = CascadeType.ALL)
+    private Set<Localization> localizations = new HashSet<>();
 
     public Language() {
     }
 
-    public Long getId() {
-        return id;
+    public Long getLangId() {
+        return langId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setLangId(Long langId) {
+        this.langId = langId;
     }
 
     public String getNameLng() {
@@ -23,5 +33,13 @@ public class Language {
 
     public void setNameLng(String nameLng) {
         this.nameLng = nameLng;
+    }
+
+    public Set<Localization> getLocalizations() {
+        return localizations;
+    }
+
+    public void setLocalizations(Set<Localization> localizations) {
+        this.localizations = localizations;
     }
 }
