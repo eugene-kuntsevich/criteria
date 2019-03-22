@@ -6,6 +6,12 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.engine.SessionFactoryImplementor;
+import org.hibernate.engine.SessionImplementor;
+import org.hibernate.impl.CriteriaImpl;
+import org.hibernate.loader.criteria.CriteriaJoinWalker;
+import org.hibernate.loader.criteria.CriteriaQueryTranslator;
+import org.hibernate.persister.entity.OuterJoinLoadable;
 import pojo.City;
 import pojo.Language;
 import pojo.Localization;
@@ -52,22 +58,50 @@ public class MainClassCriteriaWithAnnotation {
         Session session = getSession();
         session.beginTransaction();
 
-        Criteria cr = session.createCriteria(City.class)
-                .createCriteria("localizations")
-                .createAlias("language", "lng")
-                .createAlias("city", "c")
-                .add(Restrictions.in("lng.langId", Arrays.asList(1L)));
 
-        List<City> results = cr.list();
+        Criteria criteria = session.createCriteria(City.class);
+        Criteria cr = criteria
+                .createCriteria("localizations");
+//                .createAlias("localizations", "ls");
+                //.createAlias("city", "c")
+//                .add(Restrictions.eq("localizations.language", getLanguage()));
+
+        CriteriaImpl criteriaImpl = (CriteriaImpl) criteria;
+        SessionImplementor session1 = criteriaImpl.getSession();
+        SessionFactoryImplementor factory = session1.getFactory();
+        CriteriaQueryTranslator translator = new CriteriaQueryTranslator(factory, criteriaImpl, criteriaImpl.getEntityOrClassName(), CriteriaQueryTranslator.ROOT_SQL_ALIAS);
+        String[] implementors = factory.getImplementors(criteriaImpl.getEntityOrClassName());
+
+        CriteriaJoinWalker walker = new CriteriaJoinWalker((OuterJoinLoadable) factory.getEntityPersister(implementors[0]),
+                translator,
+                factory,
+                criteriaImpl,
+                criteriaImpl.getEntityOrClassName(),
+                session1.getLoadQueryInfluencers());
+
+        String sql = walker.getSQLString();
+        System.out.println(sql);
+
+        List<City> results = criteria.list();
 
         for (City city : results) {
-            System.out.println(city.getName());
+            //System.out.println(city.getName());
             for (Localization l : city.getLocalizations()) {
-                System.out.println(l.getLanguage().getNameLng());
+                //System.out.println(l.getLanguage().getNameLng());
                 System.out.println(l.getValue());
             }
             System.out.println("-----------");
         }
+    }
+
+    private static Language getLanguage(){
+        Criteria criteria = getSession().createCriteria(Language.class);
+
+        criteria.add(Restrictions.eq("langId", 1L));
+
+        List<Language> languages = criteria.list();
+
+        return languages.iterator().next();
     }
 }
 
