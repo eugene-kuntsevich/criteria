@@ -1,6 +1,7 @@
 package pojo;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -10,10 +11,11 @@ public class City {
     @Column(name = "city_id")
     private Long cityId;
 
+    @Column(name = "name")
     private String name;
 
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
-    private Set<Localization> localizations;
+    private Set<Localization> localizations = new HashSet<>();
 
     public City() {
     }

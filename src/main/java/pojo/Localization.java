@@ -8,6 +8,7 @@ public class Localization {
     @Id
     private Long id;
 
+    @Column(name = "value")
     private String value;
 
     @ManyToOne

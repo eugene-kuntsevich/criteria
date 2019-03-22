@@ -5,12 +5,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "language")
+@Table(name = "languages")
 public class Language {
     @Id
     @Column(name = "lang_id")
     private Long langId;
 
+    @Column(name = "name_lng")
     private String nameLng;
 
     @OneToMany(mappedBy = "language", cascade = CascadeType.ALL)
