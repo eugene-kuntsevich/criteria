@@ -16,15 +16,7 @@ import pojo.City;
 import pojo.Language;
 import pojo.Localization;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Root;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -51,9 +43,6 @@ public class MainClassCriteriaWithAnnotation {
         }
     }
 
-    private static Session getSession() throws HibernateException {
-        return concreteSessionFactory.openSession();
-    }
 
     public static void main(String[] args) {
         Session session = getSession();
@@ -63,10 +52,10 @@ public class MainClassCriteriaWithAnnotation {
                 .createAlias("localizations", "ls", JoinType.LEFT.ordinal())
                 .add(Restrictions.or(
                         Restrictions.isNull("ls.language.langId"),
-                        Restrictions.eq("ls.language.langId", 1L)));
+                        Restrictions.eq("ls.language.langId", 2L)))
+                .setProjection(Projections.property("ls.value"));
 
-
-        //printQuery(criteria);
+        printQuery(criteria);
 
         List results = criteria.list();
 
@@ -74,24 +63,12 @@ public class MainClassCriteriaWithAnnotation {
 
         for (Object object : results) {
 
-            System.out.print(((City) object).getName() + ": ");
-            for (Localization l : ((City) object).getLocalizations()) {
-                System.out.print(l.getValue() + " ");
+            System.out.println(((String) object));
 
-            }
-            System.out.println();
             System.out.println("-----------");
         }
-    }
 
-    private static Language getLanguage() {
-        Criteria criteria = getSession().createCriteria(Language.class);
-
-        criteria.add(Restrictions.eq("langId", 1L));
-
-        List<Language> languages = criteria.list();
-
-        return languages.iterator().next();
+        session.close();
     }
 
     private static void printQuery(Criteria criteria) {
@@ -112,11 +89,10 @@ public class MainClassCriteriaWithAnnotation {
         System.out.println(sql);
     }
 
-    //Criteria cr = criteria.createCriteria("localizations");
-    //add(Restrictions.isNull("value"));
-//                .createAlias("localizations", "ls");
-    //.createAlias("city", "c")
-//                .add(Restrictions.eq("localizations.language", getLanguage()));
+    private static Session getSession() throws HibernateException {
+        return concreteSessionFactory.openSession();
+    }
+
 }
 
 
