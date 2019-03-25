@@ -3,6 +3,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
@@ -12,6 +13,8 @@ import org.hibernate.impl.CriteriaImpl;
 import org.hibernate.loader.criteria.CriteriaJoinWalker;
 import org.hibernate.loader.criteria.CriteriaQueryTranslator;
 import org.hibernate.persister.entity.OuterJoinLoadable;
+import org.hibernate.type.StringType;
+import org.hibernate.type.Type;
 import pojo.City;
 import pojo.Language;
 import pojo.Localization;
@@ -53,8 +56,9 @@ public class MainClassCriteriaWithAnnotation {
                 .add(Restrictions.or(
                         Restrictions.isNull("ls.language.langId"),
                         Restrictions.eq("ls.language.langId", 2L)))
-                .setProjection(Projections.property("ls.value"));
-
+                .setProjection(Projections.sqlProjection("coalesce (value, name) as value", new String[]{"value"}, new Type[]{new StringType()}))
+                .addOrder(Order.asc("ls.value"));
+        
         printQuery(criteria);
 
         List results = criteria.list();
