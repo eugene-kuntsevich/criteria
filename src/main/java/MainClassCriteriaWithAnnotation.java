@@ -3,21 +3,18 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.engine.SessionFactoryImplementor;
+import org.hibernate.engine.SessionImplementor;
+import org.hibernate.impl.CriteriaImpl;
+import org.hibernate.loader.criteria.CriteriaJoinWalker;
+import org.hibernate.loader.criteria.CriteriaQueryTranslator;
+import org.hibernate.persister.entity.OuterJoinLoadable;
 import pojo.City;
 import pojo.Language;
 import pojo.Localization;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.util.Arrays;
+import javax.persistence.criteria.JoinType;
 import java.util.List;
 import java.util.Properties;
 
@@ -44,31 +41,58 @@ public class MainClassCriteriaWithAnnotation {
         }
     }
 
-    public static Session getSession() throws HibernateException {
-        return concreteSessionFactory.openSession();
-    }
 
     public static void main(String[] args) {
         Session session = getSession();
         session.beginTransaction();
 
-        Criteria cr = session.createCriteria(City.class)
-                .createCriteria("localizations")
-                .createAlias("language", "lng")
-                .createAlias("city", "c")
-                .add(Restrictions.in("lng.langId", Arrays.asList(1L)));
+        Criteria criteria = session.createCriteria(City.class, "c")
+                .createAlias("localizations", "ls", JoinType.LEFT.ordinal())
+                .add(Restrictions.or(
+                        Restrictions.isNull("ls.language.langId"),
+                        Restrictions.eq("ls.language.langId", 2L)));
 
-        List<City> results = cr.list();
+        criteria.setProjection(new CoalesceSQLProjection("val", "ls.value", "c.name"));
 
-        for (City city : results) {
-            System.out.println(city.getName());
-            for (Localization l : city.getLocalizations()) {
-                System.out.println(l.getLanguage().getNameLng());
-                System.out.println(l.getValue());
-            }
+        criteria.addOrder(OrderBySqlFormula.sqlFormula("val asc"));
+
+        System.out.println(queryAsString(criteria));
+
+        List results = criteria.list();
+
+        System.out.println();
+
+        for (Object object : results) {
+
+            System.out.println(((String) object));
+
             System.out.println("-----------");
         }
+
+        session.close();
     }
+
+    private static String queryAsString(Criteria criteria) {
+        CriteriaImpl criteriaImpl = (CriteriaImpl) criteria;
+        SessionImplementor session1 = criteriaImpl.getSession();
+        SessionFactoryImplementor factory = session1.getFactory();
+        CriteriaQueryTranslator translator = new CriteriaQueryTranslator(factory, criteriaImpl, criteriaImpl.getEntityOrClassName(), CriteriaQueryTranslator.ROOT_SQL_ALIAS);
+        String[] implementors = factory.getImplementors(criteriaImpl.getEntityOrClassName());
+
+        CriteriaJoinWalker walker = new CriteriaJoinWalker((OuterJoinLoadable) factory.getEntityPersister(implementors[0]),
+                translator,
+                factory,
+                criteriaImpl,
+                criteriaImpl.getEntityOrClassName(),
+                session1.getLoadQueryInfluencers());
+
+        return walker.getSQLString();
+    }
+
+    private static Session getSession() throws HibernateException {
+        return concreteSessionFactory.openSession();
+    }
+
 }
 
 
