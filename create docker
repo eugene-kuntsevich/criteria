@@ -1,0 +1,28 @@
+cd ~/criteria-db/
+
+sudo docker build -t criteria-db .
+
+sudo docker run -d -p 3308:3308 --name criteria-db -e MYSQL_ROOT_PASSWORD=root criteria-db
+
+sudo docker exec -it criteria-db bash
+
+root@d095dc5db23d:/# mysql -uroot -p
+
+>then enter your password for Db
+
+mysql> show databases;
+
+mysql> use city;
+
+mysql> show tables;
+
+mysql> show columns from cities;   //use another table's names
+
+//get IP for container
+sudo docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' 21f0cd248cbb7217c2ad48f458897da03277095f89d011654fa9648c2698b561
+
+//check docker
+sudo docker ps
+
+//find port and IP
+sudo docker inspect criteria-db
