@@ -4,9 +4,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.engine.SessionFactoryImplementor;
-import org.hibernate.engine.SessionImplementor;
-import org.hibernate.impl.CriteriaImpl;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.loader.criteria.CriteriaJoinWalker;
 import org.hibernate.loader.criteria.CriteriaQueryTranslator;
 import org.hibernate.persister.entity.OuterJoinLoadable;
@@ -25,10 +25,12 @@ public class MainClassCriteriaWithAnnotation {
     static {
         try {
             Properties prop = new Properties();
-            prop.setProperty("hibernate.connection.url", "jdbc:mysql://172.17.0.5:3306/cities");
+            prop.setProperty("hibernate.connection.url", "jdbc:mysql://172.17.0.2:3306/cities");
             prop.setProperty("hibernate.connection.username", "root");
             prop.setProperty("hibernate.connection.password", "root");
             prop.setProperty("dialect", "org.hibernate.dialect.MySQLDialect");
+
+            Class.forName("com.mysql.jdbc.Driver");
 
             concreteSessionFactory = new Configuration()
                     .addProperties(prop)
