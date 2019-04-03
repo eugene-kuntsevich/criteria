@@ -10,6 +10,7 @@ import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.loader.criteria.CriteriaJoinWalker;
 import org.hibernate.loader.criteria.CriteriaQueryTranslator;
 import org.hibernate.persister.entity.OuterJoinLoadable;
+import org.springframework.stereotype.Service;
 import pojo.City;
 import pojo.Language;
 import pojo.Localization;
@@ -18,6 +19,7 @@ import javax.persistence.criteria.JoinType;
 import java.util.List;
 import java.util.Properties;
 
+@Service
 public class MainClassCriteriaWithAnnotation {
 
     private static final SessionFactory concreteSessionFactory;
@@ -25,7 +27,7 @@ public class MainClassCriteriaWithAnnotation {
     static {
         try {
             Properties prop = new Properties();
-            prop.setProperty("hibernate.connection.url", "jdbc:mysql://172.17.0.2:3306/cities");
+            prop.setProperty("hibernate.connection.url", "jdbc:mysql://172.17.0.2:3306/city");
             prop.setProperty("hibernate.connection.username", "root");
             prop.setProperty("hibernate.connection.password", "root");
             prop.setProperty("dialect", "org.hibernate.dialect.MySQLDialect");
@@ -44,7 +46,7 @@ public class MainClassCriteriaWithAnnotation {
     }
 
 
-    public static void main(String[] args) {
+    public static String mainMethod() {
         Session session = getSession();
         session.beginTransaction();
 
@@ -71,7 +73,16 @@ public class MainClassCriteriaWithAnnotation {
             System.out.println("-----------");
         }
 
+        StringBuilder builder = new StringBuilder();
+
+        for (Object object : results) {
+            builder.append(((String) object)).append("-----------");
+
+        }
+
         session.close();
+
+        return builder.toString();
     }
 
     private static String queryAsString(Criteria criteria) {
