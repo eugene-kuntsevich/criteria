@@ -1,4 +1,4 @@
-package pojo;
+package hello.pojo;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -15,7 +15,7 @@ public class City {
     private String name;
 
     @OneToMany(mappedBy = "city", cascade = CascadeType.ALL)
-    private Set<Localization> localizations = new HashSet();
+    private Set<Localization> localizations = new HashSet<>();
 
     public City() {
     }
