@@ -5,3 +5,10 @@ sudo docker run --name criteria-app criteria-app
 sudo docker run -it -d --name criteria-app criteria-app bash
 
 sudo docker exec -it ea83fc2422c5b9ebb6c4aab7d83c713410e6569b4fe8b18175ddf6f3e8268d32 bash
+
+
+
+
+sudo docker run --name criteria-app webserver
+
+sudo docker build -t webserver .
