@@ -25,7 +25,7 @@ public class MainClassCriteriaWithAnnotation {
     static {
         try {
             Properties prop = new Properties();
-            prop.setProperty("hibernate.connection.url", "jdbc:mysql://172.17.0.2:3306/cities");
+            prop.setProperty("hibernate.connection.url", "jdbc:mysql://172.17.0.2:3306/city");
             prop.setProperty("hibernate.connection.username", "root");
             prop.setProperty("hibernate.connection.password", "root");
             prop.setProperty("dialect", "org.hibernate.dialect.MySQLDialect");

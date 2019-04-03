@@ -2,7 +2,7 @@ cd ~/criteria-db/
 
 sudo docker build -t criteria-db .
 
-sudo docker run -d -p 3308:3308 --name criteria-db -e MYSQL_ROOT_PASSWORD=root criteria-db
+sudo docker run -d -p 3308:3308 --name criteria-db-cont -e MYSQL_ROOT_PASSWORD=root criteria-db
 
 sudo docker exec -it criteria-db bash
 
@@ -26,3 +26,6 @@ sudo docker ps
 
 //find port and IP
 sudo docker inspect criteria-db
+
+
+sudo docker run -t -d --name criteria-app-jar-cont criteria-app-jar
