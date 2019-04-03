@@ -28,4 +28,4 @@ sudo docker ps
 sudo docker inspect criteria-db
 
 
-sudo docker run -t -d --name criteria-app-jar-cont criteria-app-jar
+
