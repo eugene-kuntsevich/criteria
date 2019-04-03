@@ -1,3 +1,5 @@
+package hello;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.CriteriaQuery;
 import org.hibernate.criterion.SQLProjection;

@@ -4,7 +4,7 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name = "pojo.City" table = "cities">
+    <class name = "hello.pojo.City" table = "cities">
 
         <meta attribute = "class-description">
             This class contains the city detail.

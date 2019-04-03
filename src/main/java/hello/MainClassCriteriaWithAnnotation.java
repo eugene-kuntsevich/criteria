@@ -1,3 +1,5 @@
+package hello;
+
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -11,9 +13,9 @@ import org.hibernate.loader.criteria.CriteriaJoinWalker;
 import org.hibernate.loader.criteria.CriteriaQueryTranslator;
 import org.hibernate.persister.entity.OuterJoinLoadable;
 import org.springframework.stereotype.Service;
-import pojo.City;
-import pojo.Language;
-import pojo.Localization;
+import hello.pojo.City;
+import hello.pojo.Language;
+import hello.pojo.Localization;
 
 import javax.persistence.criteria.JoinType;
 import java.util.List;
@@ -76,7 +78,7 @@ public class MainClassCriteriaWithAnnotation {
         StringBuilder builder = new StringBuilder();
 
         for (Object object : results) {
-            builder.append(((String) object)).append("-----------");
+            builder.append(((String) object)).append("\n").append("-----------").append("\n");
 
         }
 
