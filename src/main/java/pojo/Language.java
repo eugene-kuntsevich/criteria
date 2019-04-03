@@ -15,7 +15,7 @@ public class Language {
     private String nameLng;
 
     @OneToMany(mappedBy = "language", cascade = CascadeType.ALL)
-    private Set<Localization> localizations = new HashSet<>();
+    private Set<Localization> localizations = new HashSet();
 
     public Language() {
     }
